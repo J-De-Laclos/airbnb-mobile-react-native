@@ -10,6 +10,11 @@ import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
 import SplashScreen from "./containers/SplashScreen";
+import LogoHeader from "./components/LogoHeader";
+import RoomScreen from "./containers/RoomScreen";
+import ArrowLeft from "./components/ArrowLeft";
+import { Entypo } from "@expo/vector-icons";
+import AroundMeScreen from "./containers/ArounMeScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -55,11 +60,11 @@ export default function App() {
         {userToken === null ? (
           // No token found, user isn't signed in
           <>
-            <Stack.Screen name="SignIn">
-              {() => <SignInScreen setToken={setToken} />}
+            <Stack.Screen name="SignIn" options={{ headerShown: false }}>
+              {(props) => <SignInScreen {...props} setToken={setToken} />}
             </Stack.Screen>
-            <Stack.Screen name="SignUp">
-              {() => <SignUpScreen setToken={setToken} />}
+            <Stack.Screen name="SignUp" options={{ headerShown: false }}>
+              {(props) => <SignUpScreen {...props} setToken={setToken} />}
             </Stack.Screen>
           </>
         ) : (
@@ -87,12 +92,22 @@ export default function App() {
                       <Stack.Screen
                         name="Home"
                         options={{
-                          title: "My App",
-                          headerStyle: { backgroundColor: "red" },
-                          headerTitleStyle: { color: "white" },
+                          // title: "My App",
+                          // headerStyle: { backgroundColor: "red" },
+                          // headerTitleStyle: { color: "white" },
+                          headerTitle: () => <LogoHeader />,
                         }}
                       >
                         {() => <HomeScreen />}
+                      </Stack.Screen>
+                      <Stack.Screen
+                        name="Room"
+                        options={{
+                          headerTitle: () => <LogoHeader />,
+                          headerLeft: () => <ArrowLeft />,
+                        }}
+                      >
+                        {(props) => <RoomScreen {...props} />}
                       </Stack.Screen>
 
                       <Stack.Screen
@@ -128,6 +143,29 @@ export default function App() {
                         }}
                       >
                         {() => <SettingsScreen setToken={setToken} />}
+                      </Stack.Screen>
+                    </Stack.Navigator>
+                  )}
+                </Tab.Screen>
+                <Tab.Screen
+                  name="TabAroundMe"
+                  options={{
+                    tabBarLabel: "Around me",
+                    tabBarIcon: ({ color, size }) => (
+                      <Entypo name="location-pin" size={size} color={color} />
+                    ),
+                  }}
+                >
+                  {() => (
+                    <Stack.Navigator>
+                      <Stack.Screen
+                        name="AroundMe"
+                        options={{
+                          headerTitle: () => <LogoHeader />,
+                          headerLeft: () => <ArrowLeft />,
+                        }}
+                      >
+                        {() => <AroundMeScreen setToken={setToken} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
